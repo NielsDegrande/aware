@@ -1,0 +1,26 @@
+[
+  {
+    "id": "1",
+    "name": "Agent Smith",
+    "description": "An AI agent for support.",
+    "tags": ["ai", "support"]
+  },
+  {
+    "id": "2",
+    "name": "Agent Jones",
+    "description": "Handles chatbot interactions.",
+    "tags": ["chatbot", "ai"]
+  },
+  {
+    "id": "3",
+    "name": "Agent Brown",
+    "description": "Data analysis specialist.",
+    "tags": ["data", "analysis"]
+  },
+  {
+    "name": "Agent White",
+    "description": "A new support agent.",
+    "tags": ["support", "ai"],
+    "id": "4"
+  }
+]

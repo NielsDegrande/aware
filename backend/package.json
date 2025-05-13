@@ -1,0 +1,26 @@
+{
+  "name": "aware-backend",
+  "version": "1.0.0",
+  "description": "Discovering agents.",
+  "author": "Niels Degrande ",
+  "license": "MIT",
+  "main": "src/index.ts",
+  "keywords": [
+    "agents",
+    "discovery"
+  ],
+  "scripts": {
+    "start": "pnpm run dev",
+    "dev": "tsx src/index.ts"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.11.30",
+    "typescript": "^5.4.5",
+    "tsx": "^4.7.0"
+  },
+  "packageManager": "pnpm@10.10.0+sha512.d615db246fe70f25dcfea6d8d73dee782ce23e2245e3c4f6f888249fb568149318637dca73c2c5c8ef2a4ca0d5657fb9567188bfab47f566d1ee6ce987815c39"
+}
