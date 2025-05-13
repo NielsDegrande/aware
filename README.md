@@ -12,6 +12,12 @@ Agent discovery and registration.
    cd backend
    ```
 
+1. Copy (and update) the `.env.example` file to `.env`:
+
+   ```sh
+   cp .env.example .env
+   ```
+
 1. Start the database:
 
    ```sh
@@ -48,6 +54,12 @@ Agent discovery and registration.
    cd mcp
    ```
 
+1. Copy (and update) the `.env.example` file to `.env`:
+
+   ```sh
+   cp .env.example .env
+   ```
+
 1. Install dependencies:
 
    ```sh
@@ -58,4 +70,10 @@ Agent discovery and registration.
 
    ```sh
    pnpm dev
+   ```
+
+   Alternatively, you can use the inspector:
+
+   ```sh
+   pnpm inspect
    ```

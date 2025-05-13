@@ -1,8 +1,8 @@
 /**
  * Provides data access.
- **/
+ */
 
-import { PrismaClient, Prisma } from ".prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { Agent } from "./agent";
 
 const prisma = new PrismaClient();

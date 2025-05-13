@@ -8,7 +8,6 @@ import dotenv from "dotenv";
 import { Agent } from "./agent";
 import { loadAgents, addAgent } from "./data";
 
-// Load environment variables from .env file
 dotenv.config();
 
 const app = express();
@@ -84,7 +83,6 @@ app.get("/agents/:id", async (req: Request, res: Response) => {
  * @param res - The Express response object. Returns the created Agent object.
  * @returns void
  */
-app.use(express.json());
 app.post("/agents", async (req: Request, res: Response) => {
   try {
     const agent: Omit<Agent, "id"> = req.body;
