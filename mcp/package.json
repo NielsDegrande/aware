@@ -13,11 +13,12 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsx src/index.ts",
-    "start": "pnpm run dev",
-    "inspect": "npx @modelcontextprotocol/inspector tsx src/index.ts"
+    "inspect": "npx @modelcontextprotocol/inspector tsx src/index.ts",
+    "start": "pnpm run dev"
   },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.11.2",
+    "dotenv": "^16.5.0",
     "zod": "^3.24.4"
   },
   "devDependencies": {

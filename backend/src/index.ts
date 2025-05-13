@@ -4,16 +4,16 @@
 
 import express, { Request, Response } from "express";
 
-
+import dotenv from "dotenv";
 import { Agent } from "./agent";
-import { loadAgents, saveAgents } from "./data";
+import { loadAgents, addAgent } from "./data";
+
+// Load environment variables from .env file
+dotenv.config();
 
 const app = express();
 app.use(express.json());
-const PORT = process.env.PORT || 3000;
-
-let agents: Agent[] = loadAgents();
-
+const PORT = process.env.PORT;
 
 /**
  * GET /agents
@@ -24,8 +24,8 @@ let agents: Agent[] = loadAgents();
  * @param res - The Express response object. Returns a JSON array of agents.
  * @returns void
  */
-app.get("/agents", (req: Request, res: Response) => {
-  let result = agents;
+app.get("/agents", async (req: Request, res: Response) => {
+  let result = await loadAgents();
   const { query, tags } = req.query;
 
   // TODO: Better search.
@@ -62,8 +62,12 @@ app.get("/agents", (req: Request, res: Response) => {
  * @param res - The Express response object. Returns the Agent object or 404 if not found.
  * @returns void
  */
-app.get("/agents/:id", (req: Request, res: Response) => {
-  const { id } = req.params;
+app.get("/agents/:id", async (req: Request, res: Response) => {
+  const id = Number(req.params.id);
+  if (isNaN(id)) {
+    return res.status(400).json({ error: "Invalid agent ID" });
+  }
+  const agents = await loadAgents();
   const agent = agents.find((a) => a.id === id);
   if (!agent) {
     return res.status(404).json({ error: "Agent not found" });
@@ -74,26 +78,22 @@ app.get("/agents/:id", (req: Request, res: Response) => {
 /**
  * POST /agents
  *
- * Adds a new agent to the in-memory list and persists it.
+ * Adds a new agent to the database and persists it.
  *
  * @param req - The Express request object. Expects an Agent object in the request body.
  * @param res - The Express response object. Returns the created Agent object.
  * @returns void
  */
 app.use(express.json());
-app.post("/agents", (req: Request, res: Response) => {
-  const agent: Omit<Agent, "id"> = req.body;
-  // Auto-increment ID: find the max current ID and increment by 1.
-  const maxId = agents.reduce((max, a) => Math.max(max, Number(a.id)), 0);
-  const newAgent: Agent = {
-    ...agent,
-    id: String(maxId + 1),
-  };
-  agents.push(newAgent);
-  saveAgents(agents);
-  res.status(201).json(newAgent);
+app.post("/agents", async (req: Request, res: Response) => {
+  try {
+    const agent: Omit<Agent, "id"> = req.body;
+    const created = await addAgent(agent);
+    res.status(201).json(created);
+  } catch (error) {
+    res.status(500).json({ error: "Failed to create agent" });
+  }
 });
-
 
 /**
  * Starts the Express server and listens for incoming requests.

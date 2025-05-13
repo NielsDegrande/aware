@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres
+    container_name: aware_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: db
+    ports:
+      - "5432:5432"
+    volumes:
+      - aware_data:/var/lib/postgresql/data
+volumes:
+  aware_data:
+    driver: local

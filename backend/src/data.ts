@@ -1,42 +1,27 @@
 /**
  * Provides data access.
- *
- * Currently reads from agents.json, but will be replaced with a database in the future.
- */
+ **/
 
-import fs from "fs";
-import path from "path";
+import { PrismaClient, Prisma } from ".prisma/client";
 import { Agent } from "./agent";
 
+const prisma = new PrismaClient();
+
 /**
- * Loads all agents from the data source.
+ * Loads all agents from the database.
  *
- * @returns An array of Agent objects.
+ * @returns A promise that resolves to an array of Agent objects.
  */
-export function loadAgents(): Agent[] {
-  const agentsFilePath = path.join(__dirname, "../agents.json");
-  try {
-    const data = fs.readFileSync(agentsFilePath, "utf-8");
-    return JSON.parse(data) as Agent[];
-  } catch (err) {
-    // In production, consider throwing or handling this error more robustly.
-    console.error("Failed to load agents.json:", err);
-    return [];
-  }
+export async function loadAgents(): Promise<Agent[]> {
+  return prisma.agent.findMany();
 }
 
 /**
- * Persists the given list of agents to the data source.
+ * Adds a new agent to the database.
  *
- * @param agents - The array of Agent objects to persist.
- * @returns void
+ * @param agent - The agent data (without id) to add.
+ * @returns A promise that resolves to the created Agent object.
  */
-export function saveAgents(agents: Agent[]): void {
-  const agentsFilePath = path.join(__dirname, "../agents.json");
-  try {
-    fs.writeFileSync(agentsFilePath, JSON.stringify(agents, null, 2), "utf-8");
-  } catch (err) {
-    // TODO: Handle error appropriately in production.
-    console.error("Failed to save agents.json:", err);
-  }
+export async function addAgent(agent: Omit<Agent, "id">): Promise<Agent> {
+  return prisma.agent.create({ data: agent });
 }

@@ -12,10 +12,22 @@ Agent discovery and registration.
    cd backend
    ```
 
+1. Start the database:
+
+   ```sh
+   docker-compose up -d
+   ```
+
 1. Install dependencies:
 
    ```sh
    pnpm install
+   ```
+
+1. Run migrations:
+
+   ```sh
+   pnpm migrate
    ```
 
 1. Start the server (development):
@@ -45,5 +57,5 @@ Agent discovery and registration.
 1. Start the server (development):
 
    ```sh
-
+   pnpm dev
    ```
