@@ -3,6 +3,8 @@
  */
 
 import express, { Request, Response } from "express";
+import swaggerJsdoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
 
 import dotenv from "dotenv";
 import { Agent } from "./agent";
@@ -14,14 +16,81 @@ const app = express();
 app.use(express.json());
 const PORT = process.env.PORT;
 
+const swaggerOptions = {
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "Aware API",
+      version: "1.0.0",
+      description: "API for managing AI agents.",
+    },
+    servers: [
+      {
+        url: `http://localhost:${PORT}`,
+      },
+    ],
+  },
+  apis: ["./src/*.ts"],
+};
+
+const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Raw JSON.
+app.get("/openapi.json", (_, res) => res.json(swaggerSpec));
+
 /**
- * GET /agents
- *
- * Returns a list of all agents, optionally filtered by a search query and/or tags.
- *
- * @param req - The Express request object. Supports optional query parameters `query` and `tags`.
- * @param res - The Express response object. Returns a JSON array of agents.
- * @returns void
+ * @swagger
+ * components:
+ *   schemas:
+ *     Agent:
+ *       type: object
+ *       required:
+ *         - name
+ *         - description
+ *         - tags
+ *       properties:
+ *         id:
+ *           type: integer
+ *           description: The auto-generated id of the agent.
+ *         name:
+ *           type: string
+ *           description: The name of the agent.
+ *         description:
+ *           type: string
+ *           description: The description of the agent.
+ *         tags:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: List of tags associated with the agent.
+ */
+
+/**
+ * @swagger
+ * /agents:
+ *   get:
+ *     summary: Returns a list of agents.
+ *     description: Optional filter by search query and/or tags.
+ *     parameters:
+ *       - in: query
+ *         name: query
+ *         schema:
+ *           type: string
+ *         description: Search query to filter agents by name or description.
+ *       - in: query
+ *         name: tags
+ *         schema:
+ *           type: string
+ *         description: Comma-separated list of tags to filter agents.
+ *     responses:
+ *       200:
+ *         description: A list of agents.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Agent'
  */
 app.get("/agents", async (req: Request, res: Response) => {
   let result = await loadAgents();
@@ -53,13 +122,28 @@ app.get("/agents", async (req: Request, res: Response) => {
 });
 
 /**
- * GET /agents/:id
- *
- * Returns a specific agent by ID.
- *
- * @param req - The Express request object. Expects an `id` parameter in the URL.
- * @param res - The Express response object. Returns the Agent object or 404 if not found.
- * @returns void
+ * @swagger
+ * /agents/{id}:
+ *   get:
+ *     summary: Get an agent by ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: integer
+ *         description: The agent ID.
+ *     responses:
+ *       200:
+ *         description: The agent object.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Agent'
+ *       400:
+ *         description: Invalid agent ID.
+ *       404:
+ *         description: Agent not found.
  */
 app.get("/agents/:id", async (req: Request, res: Response) => {
   const id = Number(req.params.id);
@@ -75,13 +159,25 @@ app.get("/agents/:id", async (req: Request, res: Response) => {
 });
 
 /**
- * POST /agents
- *
- * Adds a new agent to the database and persists it.
- *
- * @param req - The Express request object. Expects an Agent object in the request body.
- * @param res - The Express response object. Returns the created Agent object.
- * @returns void
+ * @swagger
+ * /agents:
+ *   post:
+ *     summary: Create a new agent.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/Agent'
+ *     responses:
+ *       201:
+ *         description: The created agent.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Agent'
+ *       500:
+ *         description: Server error.
  */
 app.post("/agents", async (req: Request, res: Response) => {
   try {
