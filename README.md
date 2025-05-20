@@ -44,6 +44,13 @@ Agent discovery and registration.
 
    The server will run on `http://localhost:3000` by default.
 
+### OpenAPI
+
+You can interact with the OpenAPI specification on:
+
+- Swagger UI: `http://localhost:3000/docs`.
+- Raw JSON: `http://localhost:3000/openapi.json`.
+
 ## MCP Server
 
 ### Setup
