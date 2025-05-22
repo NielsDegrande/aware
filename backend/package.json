@@ -10,9 +10,9 @@
   "license": "MIT",
   "main": "src/index.ts",
   "scripts": {
-    "dev": "tsx src/index.ts",
+    "dev": "tsx watch src/index.ts",
     "migrate": "prisma migrate dev",
-    "start": "pnpm run dev"
+    "start": "tsx src/index.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.7.0",
